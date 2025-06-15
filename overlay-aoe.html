@@ -32,10 +32,9 @@
         }
 
         .MainContent {
-            position: relative;
-            width: fit-content;
-            max-width: 570px;
-            height: 90px;
+			position: relative;
+			width: clamp(450px, 100vw, 570px);
+			height: 90px;
             background-color: #444;
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAYCAIAAAADE/iqAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMS40E0BoxAAAAkJJREFUSEvNlulyozAQhP3TwQFxin3/J92vNcMhZGOym6qki3IhqTU9F5Jv8/wnf+au6/i9ghDCNE0+OMUwDH3fz9GHK57K97ZWLPFk+HZ5oYh+W8oQ5za0cSpM5ohRT5IfeDl48Fw+irhiW3KYFeTbdhzHg8UDLsoLwzA2TYPRrmvJ1eJELp9MoErmcRRgd7Ic5KYZYgAmNkPTGFfFShYMJg8v1nX9qKr07v6yTcFtMKZK/ng8tCdhHKeu7eCX8jDv9ztGFqac3jfBjeIxhbZmHR4uG5jEZ3OCIYnBJ4LwvOyYSm/Xkz8Ljl31Z00ejWdIgYnJ6qBaxFtVVQx8XTCLMmowVTgweTmGuANMaPQjzNAE8+MJUnYJjJrcYiy/nNUD98M8UHo10M8JUissNl+RUxrwgNqXOMoDeifvg5cgAUtp3uCXyq/4N/m1Md+AMl2WD98vTzOdy2/g40zy7s0J+FJ/Uv567SXPB+CjDZbzTAl5HSnnwFI6cN5eg2jyqPYprAM708YmZyLHSPIgffqFcwYi4UwEMP2CeQGWOKdhKno+AM7LnROLdTtl6wbV5G/kpCQ4qrCYFs2W7DxemLq96MFDt9oSFvAw1Sgutddsj0dMGYmd3BYK15R2oRCZbTbg98dH5cw8YibJBLVw6hS5q9i70rLWg6dEyDtdu/BLi0IUE5ozQ6tilzSIYtq91eOHmCOuaN7wpPNhr8vnQN5v+ncgDZ6eHK/kLxklQ1+Q761tM/xX9OQzfumvZoEflZ/nv1weAZl2wHrbAAAAAElFTkSuQmCC);
             background-repeat: repeat;
@@ -263,13 +262,15 @@
 
         /* Game History Styling */
         .game-history {
-            display: inline-flex !important;
-            flex-direction: row !important;
-            align-items: center;
-            gap: 2px;
-            margin: 0 6px;
-            width: fit-content;
-        }
+			display: inline-flex !important;
+			flex-direction: row !important;
+			align-items: center;
+			gap: 2px;
+			margin: 0 6px;
+			width: fit-content;
+			position: relative;
+			top: 0;
+		}
 
         .history-game {
             width: 18px;
@@ -366,11 +367,12 @@
 		/* ===== End of Civ Emblem addition ===== */
 		
 		#team1Name, #team2Name {
-		  max-width: 130px;
+		  max-width: 180px;
 		  overflow: hidden;
 		  text-overflow: ellipsis;
 		  white-space: nowrap;
-		  font-size: clamp(10px, 1.8vw, 18px);
+		  font-size: clamp(13.5px, 4vw, 18px);
+		  min-font-size: 13.5px;
 		}
 		
 		/* Make both side panels share remaining space equally */
@@ -403,9 +405,53 @@
 		  height: auto;
 		  opacity: 0.8;
 		}
-		
-		.player-flag { width:16px; height:auto; }
 
+		.DatosJugador.Team1,
+		.DatosJugador.Team2 {
+		  display: flex;      /* they already are, but just in case */
+		  align-items: center;/* this is the key */
+		}
+
+		.player-flag { width:16px; height:auto; }
+		.name-icon {
+		  width: auto;
+		  height: 20px;
+		  object-fit: cover;
+		  margin-right: -2px;
+		  display: inline-block;
+		  vertical-align: middle;
+		}
+		.name-icon,
+		#team1Name, #team2Name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.DatosJugador.Team1,
+.DatosJugador.Team2 {
+  align-items: center;  /* vertically center everything in those rows */
+}
+
+.status-top {
+    position: absolute;
+    top: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.status-top.left {
+    right: 4px;  /* Top-right of left player container */
+}
+
+.status-top.right {
+    left: 4px;   /* Top-left of right player container */
+}
+
+.player-info > div > div:first-child {
+    margin-top: -12px;
+}
     </style>
 </head>
 <body>
@@ -418,25 +464,23 @@
         <div class="horizontal-layout" id="horizontalLayout" style="display: none; width: 100%; height: 100%; box-sizing: border-box; min-width: 450px;">
              
             <!-- Left Player Section -->
-            <div class="player-section left-player" style="display: flex; align-items: center; padding: 0; min-width: 0;">
-                <!-- Aqui será injetado o civ-corner via JS após sabermos o emblema -->
-                <img id="team1UniqueUnitLarge" class="unique-unit-large" style="display: none; flex-shrink: 0; margin-right: 3px;" alt="Unique unit">
-                <div class="player-info" style="width: 100%; min-width: 0; margin-right: 3px;">
-                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-width: 0;">
-                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 2px;">
-                            <div id="team1Name" style="font-size: 18px; font-weight: bold; color: #405bfe; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;"></div>
-                            <div id="team1Status" style="font-size: 11px; margin-left: 8px; flex-shrink: 0;"></div>
-                        </div>
-                        <div style="display: flex; align-items: center; justify-content: center;">
-                            <div class="game-history" id="team1History" style="display: none; margin-right: 4px;">
-                                <div id="team1HistoryGames" style="display: flex; flex-direction: row; gap: 2px;"></div>
-                            </div>
-                            <div id="team1Rating" style="font-size: 16px; color: #4CAF50; font-weight: bold;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="BarraColorJugador BarraColorJugadorc1" style="position: absolute; bottom: 0; left: 0; width: 50%; height: 2px;"></div>
-            </div>
+			<div class="player-section left-player" style="display: flex; align-items: center; padding: 0; min-width: 0; position: relative;">
+				<div id="team1Status" class="status-top left"></div>
+				<img id="team1UniqueUnitLarge" class="unique-unit-large" style="display: none; flex-shrink: 0; margin-right: 3px;" alt="Unique unit">
+				<div class="player-info" style="width: 100%; min-width: 0; margin-right: 3px;">
+					<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-width: 0;">
+						<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 2px;">
+							<div id="team1Name" style="font-size: 18px; font-weight: bold; color: #405bfe; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;"></div>
+						</div>
+						<div style="display: flex; align-items: center; justify-content: center;">
+							<div class="game-history" id="team1History" style="display: none; margin-right: 4px;">
+								<div id="team1HistoryGames" style="display: flex; flex-direction: row; gap: 2px;"></div>
+							</div>
+							<div id="team1Rating" style="font-size: 16px; color: #4CAF50; font-weight: bold;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
 
             <!-- Center Game Info -->
             <div class="center-info" style="flex: 0 0 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid #555; border-right: 1px solid #555; padding: 0 3px;">
@@ -451,24 +495,27 @@
             </div>
 
             <!-- Right Player Section -->
-            <div class="player-section right-player" style="display: flex; align-items: center; padding: 0; min-width: 0;">
-                <div class="player-info" style="width: 100%; min-width: 0; padding-left: 3px; padding-right: 3px;">
-                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-width: 0;">
-                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 2px;">
-                            <div id="team2Name" style="font-size: 18px; font-weight: bold; color: #f25f61; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;"></div>
-                        </div>
-                        <div style="display: flex; align-items: center; justify-content: center;">
-                            <div id="team2Rating" style="font-size: 16px; color: #4CAF50; font-weight: bold;"></div>
-                            <div id="team2Status" style="font-size: 11px; margin-left: 8px; flex-shrink: 0;"></div>
-                            <div class="game-history" id="team2History" style="display: none; margin-left: 4px;">
-                                <div id="team2HistoryGames" style="display: flex; flex-direction: row; gap: 2px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <img id="team2UniqueUnitLarge" class="unique-unit-large right" style="display: none; flex-shrink: 0;" alt="Unique unit">
-                <div class="BarraColorJugador BarraColorJugadorc2" style="position: absolute; bottom: 0; right: 0; width: 50%; height: 2px;"></div>
-            </div>
+			<div class="player-section right-player" style="display: flex; align-items: center; padding: 0; min-width: 0; position: relative;">
+				<div id="team2Status" class="status-top right"></div>
+				<div class="player-info" style="width: 100%; min-width: 0; padding-left: 3px; padding-right: 3px;">
+					<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-width: 0;">
+						<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 2px;">
+							<div id="team2Name" style="font-size: 18px; font-weight: bold; color: #f25f61; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;"></div>
+						</div>
+						<div style="display: flex; align-items: center; justify-content: center;">
+							<div id="team2Rating" style="font-size: 16px; color: #4CAF50; font-weight: bold;"></div>
+							<div class="game-history" id="team2History" style="display: none; margin-left: 4px;">
+								<div id="team2HistoryGames" style="display: flex; flex-direction: row; gap: 2px;"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<img id="team2UniqueUnitLarge" class="unique-unit-large right" style="display: none; flex-shrink: 0;" alt="Unique unit">
+			</div>
+			</div>
+				<div class="BarraColorJugador BarraColorJugadorc1" style="position: absolute; bottom: 0; left: 0; width: 50%; height: 2px;"></div>
+				<div class="BarraColorJugador BarraColorJugadorc2" style="position: absolute; bottom: 0; right: 0; width: 50%; height: 2px;"></div>
+			</div>
         </div>
     </div>
 
@@ -765,10 +812,8 @@
             const ratingEl = document.getElementById(`${teamId}Rating`);
             const uniqueUnitLargeEl = document.getElementById(`${teamId}UniqueUnitLarge`);
             const statusEl = document.getElementById(`${teamId}Status`);
-			const sectionEl = document.querySelector(
-			  `.player-section.${teamId === 'team1' ? 'left-player' : 'right-player'}`
-			);
-			const barEl = sectionEl.querySelector('.BarraColorJugador');
+			const barClass = teamId === 'team1' ? '.BarraColorJugadorc1' : '.BarraColorJugadorc2';
+			const barEl = document.querySelector(barClass);
 			if (barEl) {
 			  barEl.style.backgroundImage = 'none';
 			  const barColor = player.color === 6 ? '#981cce' : player.colorHex;
@@ -777,11 +822,38 @@
 			}
 
 
-            if (teamId === 'team1') {
-			  nameEl.textContent = 'Sokół';
-			} else {
-			  nameEl.textContent = player.name || 'Unknown Player';
+            // — set name (always “Sokół” for player 1) and prepend icon only for Sokół —
+			const displayName = teamId === 'team1'
+			  ? 'Sokół'
+			  : (player.name || 'Unknown Player');
+
+			// clear old content
+			nameEl.innerHTML = '';
+
+			// only for Sokół, add your bird icon to the left
+			if (teamId === 'team1') {
+			  const icon = document.createElement('img');
+			  icon.src = 'img/sokol-icon.png';
+			  icon.alt = 'Sokół';
+			  icon.classList.add('name-icon');
+			  nameEl.appendChild(icon);
 			}
+
+			// text node for the display name
+			nameEl.appendChild(document.createTextNode(displayName));
+			
+			if (teamId === 'team2' && displayName.length > 12) {
+			  nameEl.style.letterSpacing = '-0.5px';
+			  if (displayName.length > 15) {
+				nameEl.style.letterSpacing = '-1px';
+			  }
+			}
+			
+			const nameColor = player.color === 6
+			  ? '#981cce'
+			  : (player.colorHex || '#fff');
+			nameEl.style.color = nameColor;
+
             
             // CivName
             const civNameRaw = player.civName || this.getCivName(player.civ);
@@ -805,13 +877,21 @@
             }
 
             // Win/loss status
-            const winStatus = player.won === true ? '🏆' : player.won === false ? '❌' : '';
-            const ratingChange = player.ratingDiff ? (player.ratingDiff > 0 ? '+' : '') + player.ratingDiff : '';
-            statusEl.innerHTML = `
-                <div style="color: ${player.won ? '#4CAF50' : player.won === false ? '#f44336' : '#FFC107'}; font-weight: bold; display: flex; align-items: center; gap: 3px;">
-                    ${winStatus} ${ratingChange ? ratingChange : ''}
-                </div>
-            `;
+			const winStatus = player.won === true ? '🏆' : player.won === false ? '❌' : '';
+			const ratingChange = player.ratingDiff ? (player.ratingDiff > 0 ? '+' : '') + player.ratingDiff : '';
+
+			if (statusEl) {
+				statusEl.innerHTML = `
+					<div style="color: ${player.won ? '#4CAF50' : player.won === false ? '#f44336' : '#FFC107'}; font-weight: bold; white-space: nowrap;">
+						${winStatus} ${ratingChange ? ratingChange : ''}
+					</div>
+				`;
+				// For team1 (left player), status goes top-right (.left class)
+				// For team2 (right player), status goes top-left (.right class)
+				statusEl.className = `status-top ${teamId === 'team1' ? 'left' : 'right'}`;
+			} else {
+				console.error(`Status element not found for ${teamId}`);
+			}
 			{
 			  const id   = teamId === 'team1' ? 'centerRating1' : 'centerRating2';
 			  const el   = document.getElementById(id);
@@ -845,7 +925,7 @@
 					el.appendChild(document.createTextNode(' '));
 					el.appendChild(img);
 				  }
-}
+				}
 			}
 
 
@@ -946,7 +1026,7 @@
                 'Huns': 'img/Huns.20cfa1ab.png',
                 'Koreans': 'img/Koreans.d5fcf85b.png',
                 'Italians': 'img/Italians.45513cc1.png',
-                'Indians': 'img/Indians.0249e451.png',
+                'Hindustanis': 'img/Indians.0249e451.png',
                 'Magyars': 'img/Magyars.b2f0816a.png',
                 'Slavs': 'img/Slavs.09dc13cf.png',
                 'Portuguese': 'img/Portuguese.aa10e1a9.png',
@@ -1009,7 +1089,7 @@
                 'Huns': 'img/huns-DE.dea1c562.png',
                 'Koreans': 'img/koreans-DE.22e04b69.png',
                 'Italians': 'img/italians-DE.029ea442.png',
-                'Indians': 'img/indians-DE.c83ce2de.png',
+                'Hindustanis': 'img/indians-DE.c83ce2de.png',
                 'Magyars': 'img/magyars-DE.6e21edd4.png',
                 'Slavs': 'img/slavs-DE.f4b88ab2.png',
                 'Portuguese': 'img/portuguese-DE.16b98055.png',
