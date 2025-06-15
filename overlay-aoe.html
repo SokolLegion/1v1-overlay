@@ -386,6 +386,8 @@
 		  height: auto;
 		  opacity: 0.8;
 		}
+		
+		.player-flag { width:16px; height:auto; }
 
     </style>
 </head>
@@ -746,8 +748,21 @@
             const ratingEl = document.getElementById(`${teamId}Rating`);
             const uniqueUnitLargeEl = document.getElementById(`${teamId}UniqueUnitLarge`);
             const statusEl = document.getElementById(`${teamId}Status`);
-
-            nameEl.textContent = player.name || 'Unknown Player';
+			const sectionEl = document.querySelector(
+			  `.player-section.${teamId === 'team1' ? 'left-player' : 'right-player'}`
+			);
+			const barEl = sectionEl.querySelector('.BarraColorJugador');
+			if (barEl) {
+			  barEl.style.backgroundImage = 'none';
+			  // if player.color is 6, force #981cce; otherwise use the API hex
+			  const barColor = player.color === 6 ? '#981cce' : player.colorHex;
+			  barEl.style.backgroundColor = barColor;
+			}
+            if (teamId === 'team1') {
+			  nameEl.textContent = 'Sokół';
+			} else {
+			  nameEl.textContent = player.name || 'Unknown Player';
+			}
             
             // CivName
             const civNameRaw = player.civName || this.getCivName(player.civ);
@@ -786,10 +801,11 @@
 				const isLeftSide = teamId === 'team1';
 				if (isLeftSide) {
 				  // Left side: flag first, then ELO
+				  console.log('Player data:', player);
 				  if (player.country) {
 					const code = player.country.toLowerCase();
 					const img  = document.createElement('img');
-					img.src    = `https://flagcdn.com/w20/${code}.png`;
+					img.src    = `https://flagcdn.com/${code}.svg`;
 					img.alt    = code;
 					img.classList.add('center-flag');
 					el.appendChild(img);
@@ -804,7 +820,7 @@
 				  if (player.country) {
 					const code = player.country.toLowerCase();
 					const img  = document.createElement('img');
-					img.src    = `https://flagcdn.com/w20/${code}.png`;
+					img.src    = `https://flagcdn.com/${code}.svg`;
 					img.alt    = code;
 					img.classList.add('center-flag');
 					el.appendChild(document.createTextNode(' '));
