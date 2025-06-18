@@ -315,6 +315,9 @@
         .unique-unit-large.right {
             transform: scaleX(-1);
         }
+		.unique-unit-large.left {
+            transform: scaleY(-1);
+        }
 
         .unique-unit-info {
             font-size: 11px;
@@ -332,8 +335,8 @@
         /* ===== Adding Civ Emblems ===== */
 		.center-info { position: relative; }
 
-		.center-rating.left  { left:  -52px; }  /* under left civ half */
-		.center-rating.right { right: -52px; }  /* under right civ half */
+		.center-rating.left  { left:  -52px; }
+		.center-rating.right { right: -52px; }
 
 		.center-info .civ-corner {
 		  position: absolute;
@@ -357,11 +360,11 @@
 		  opacity: 0.2;
 		}
 		.center-info .civ-corner.left img {
-		  left: 0;          /* show left 52px of a 104px icon */
+		  left: 0;         
 		  transform: none;
 		}
 		.center-info .civ-corner.right img {
-		  left: -52px;      /* show right 52px of a 104px icon */
+		  left: -52px;     
 		  transform: none;
 		}
 		/* ===== End of Civ Emblem addition ===== */
@@ -423,35 +426,35 @@
 		}
 		.name-icon,
 		#team1Name, #team2Name {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
+		  display: inline-flex;
+		  align-items: center;
+		  gap: 4px;
+		}
 
-.DatosJugador.Team1,
-.DatosJugador.Team2 {
-  align-items: center;  /* vertically center everything in those rows */
-}
+		.DatosJugador.Team1,
+		.DatosJugador.Team2 {
+		  align-items: center;  /* vertically center everything in those rows */
+		}
 
-.status-top {
-    position: absolute;
-    top: 4px;
-    font-size: 11px;
-    font-weight: bold;
-    z-index: 10;
-}
+		.status-top {
+			position: absolute;
+			top: 4px;
+			font-size: 11px;
+			font-weight: bold;
+			z-index: 10;
+		}
 
-.status-top.left {
-    right: 4px;  /* Top-right of left player container */
-}
+		.status-top.left {
+			right: 4px;  /* Top-right of left player container */
+		}
 
-.status-top.right {
-    left: 4px;   /* Top-left of right player container */
-}
+		.status-top.right {
+			left: 4px;   /* Top-left of right player container */
+		}
 
-.player-info > div > div:first-child {
-    margin-top: -12px;
-}
+		.player-info > div > div:first-child {
+			margin-top: -12px;
+		}
     </style>
 </head>
 <body>
@@ -466,7 +469,7 @@
             <!-- Left Player Section -->
 			<div class="player-section left-player" style="display: flex; align-items: center; padding: 0; min-width: 0; position: relative;">
 				<div id="team1Status" class="status-top left"></div>
-				<img id="team1UniqueUnitLarge" class="unique-unit-large" style="display: none; flex-shrink: 0; margin-right: 3px;" alt="Unique unit">
+				<img id="team1UniqueUnitLarge" class="unique-unit-large right" style="display: none; flex-shrink: 0; margin-right: 3px;" alt="Unique unit">
 				<div class="player-info" style="width: 100%; min-width: 0; margin-right: 3px;">
 					<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-width: 0;">
 						<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 2px;">
@@ -1041,7 +1044,7 @@
                 'Tatars': 'img/Tatars.869a8b59.png',
                 'Cumans': 'img/Cumans.b30f297f.png',
                 'Lithuanians': 'img/Lithuanians.0e4dbdae.png',
-                'Burgundians': 'img/Burgundians.4e63af9f0.png',
+                'Burgundians': 'img/Burgundians.4e63af9f.png',
                 'Sicilians': 'img/Sicilians.f248c9f0.png',
                 'Poles': 'img/Poles.4576c87f.png',
                 'Bohemians': 'img/Bohemians.0c0dde60.png',
@@ -1057,7 +1060,6 @@
 				'Romans':  'img/Romans.png',
 				'Jurchens':'img/Jurchens.png'
             };
-            // Se você detectar no log que a API retorna outro formato, adicione aqui.
             const path = emblemFiles[key];
             if (!path) {
                 console.debug(`getCivEmblemPath: no emblem for key='${key}'`);
